@@ -9,6 +9,12 @@ const router = createRouter({
       name: "aiChat",
       component: () => import("@/views/AiChatView.vue"),
     },
+    // 登录
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("@/views/Login.vue"),
+    },
     // 主页（暂时未用，若匹配到则跳转）
     {
       path: "/",
