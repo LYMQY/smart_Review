@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UserFilled, Loading, DocumentCopy, Delete } from "@element-plus/icons-vue";
+import { UserFilled, Loading, DocumentCopy, Delete, Document, Edit, Message, ArrowUp } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
   getWebsocketUrl,
@@ -240,7 +240,7 @@ onBeforeUnmount(() => {
             <img 
               v-else 
               src="https://img1.baidu.com/it/u=2640995470,2945739766&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
-              alt="豆包头像"
+              alt="头像"
               class="avatar-img"
             />
           </template>
@@ -302,31 +302,50 @@ onBeforeUnmount(() => {
     </ul>
 
     <!-- 输入区域：固定底部，匹配豆包样式 -->
+    <!-- 替换原有的输入区域，新增按钮布局 -->
     <div class="input-container">
       <div class="input-wrapper">
+        <!-- 输入框 -->
         <textarea
           v-model="problemText"
           class="input-textarea"
           :rows="isMobile ? 3 : 4"
-          placeholder="请输入问题..."
+          placeholder="发消息或输入 / 选择技能"
           @keydown.enter.exact.prevent="sendQuestion"
           @keydown.enter.shift.exact.prevent="problemText += '\n'"
         />
+        <!-- 按钮区域：输入框下方，两侧分布 -->
+        <div class="input-btns">
+          <div class="left-btns">
+            <el-button type="text" class="btn-icon">
+              <el-icon><Document /></el-icon>
+            </el-button>
+            <el-button type="text" class="skill-btn">
+              <span class="skill-icon">深度思考</span>
+            </el-button>
+          </div>
+          <div class="right-btns">
+            <el-button type="text" class="btn-icon">
+              <el-icon><Edit /></el-icon>
+            </el-button>
+            <el-button type="text" class="btn-icon">
+              <el-icon><Message /></el-icon>
+            </el-button>
+            <el-button
+              type="primary"
+              class="send-btn"
+              :disabled="sendBtnDisabled || !problemText.trim()"
+              @click="sendQuestion"
+            >
+              <el-icon><ArrowUp /></el-icon>
+            </el-button>
+          </div>
+        </div>
         <!-- 字数提示 -->
-        <div class="char-count">
+        <div class="char-count" v-if="false">
           {{ problemText.length }} / {{ maxCharCount }}
         </div>
-        <!-- 发送按钮 -->
-        <ElButton
-          class="send-btn"
-          type="primary"
-          :disabled="sendBtnDisabled || !problemText.trim()"
-          @click="sendQuestion"
-        >
-          发送
-        </ElButton>
       </div>
-      <!-- 移动端提示：适配小屏幕 -->
       <div class="mobile-tip" v-if="isMobile">
         提示：长按输入框可粘贴内容
       </div>
@@ -554,94 +573,222 @@ $disabled-color: #cccccc; // 禁用色
 }
 
 // 4. 输入区域：固定底部 + 响应式
+// 输入容器
 .input-container {
-  padding: 16px 0;
-  border-top: 1px solid $border-color;
-  background-color: #ffffff;
   position: sticky;
   bottom: 0;
   z-index: 10;
+  box-shadow: 0 -2px 16px rgba(0,102,255,0.04);
 
   .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     position: relative;
     display: flex;
-    align-items: flex-end;
-    background-color: #f9fafb;
-    border-radius: 12px;
-    padding: 8px;
-    border: 1px solid $border-color;
-    transition: border-color 0.2s;
+    align-items: center;
+    background: rgba(255,255,255,0.95);
+    border: 1.5px solid $border-color;
+    border-radius: 28px;
+    box-shadow: 0 2px 12px rgba(0,102,255,0.06);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
-    // 聚焦时高亮边框
     &:focus-within {
       border-color: $primary-color;
-      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.1);
+      box-shadow: 0 0 0 3px rgba(0,102,255,0.12);
+      background: linear-gradient(90deg, #e8f3ff 0%, #f5f7fa 100%);
+    }
+  }
+
+  .input-textarea {
+    margin-bottom: 10px;
+    flex: 1;
+    width: 100%;
+    min-height: 44px;
+    max-height: 180px;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 15px;
+    color: $text-primary;
+    box-sizing: border-box;
+    border-radius: 16px;
+
+    &::placeholder {
+      color: $text-placeholder;
+      font-size: 15px;
+      opacity: 0.7;
     }
 
-    // 文本域：自适应高度 + 无边框
-    .input-textarea {
-      flex: 1;
-      width: 100%;
-      min-height: 60px; // 最小高度
-      max-height: 200px; // 最大高度（防止过长）
-      padding: 8px 12px;
-      background-color: transparent;
-      border: none;
-      outline: none;
-      resize: none;
-      font-size: 14px;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .input-btns {
+    display: flex;
+    justify-content: space-between; // 两侧分布
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px 4px 12px;
+
+    .left-btns,
+    .right-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .left-btns {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+
+    .btn-icon {
       color: $text-primary;
-      box-sizing: border-box;
+      font-size: 20px;
+      padding: 10px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 
-      &::placeholder {
-        color: $text-placeholder;
-      }
-
-      // 滚动条样式
-      &::-webkit-scrollbar {
-        width: 4px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 2px;
+      &:hover {
+        background: linear-gradient(135deg, #e0e7ff 0%, #cce0ff 100%);
+        color: $primary-color;
+        box-shadow: 0 2px 8px rgba(0,102,255,0.10);
       }
     }
 
-    // 字数提示：右下角
-    .char-count {
-      position: absolute;
-      bottom: 12px;
-      left: 16px;
-      font-size: 12px;
-      color: $text-secondary;
-    }
-
-    // 发送按钮：固定位置 + 品牌色
-    .send-btn {
-      min-width: 80px;
-      height: 36px;
+    .skill-btn {
+      color: $primary-color;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 8px 18px;
       margin-left: 8px;
-      margin-bottom: 8px;
-      border-radius: 6px;
-      background-color: $primary-color;
-      border-color: $primary-color;
-      font-size: 14px;
+      border-radius: 18px;
+      background: linear-gradient(90deg, #e8f3ff 0%, #f5f7fa 100%);
+      box-shadow: 0 2px 8px rgba(0,102,255,0.06);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 
-      &:disabled {
-        background-color: #cce0ff;
-        border-color: #cce0ff;
-        color: #ffffff;
-        cursor: not-allowed;
+      &:hover {
+        background: linear-gradient(90deg, #0066ff 0%, #409eff 100%);
+        color: #fff;
+        box-shadow: 0 4px 16px rgba(0,102,255,0.14);
+      }
+
+      .skill-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
       }
     }
   }
 
-  // 移动端提示：小屏幕显示
-  .mobile-tip {
+  .right-btns {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+
+    .btn-icon {
+      color: $text-primary;
+      font-size: 20px;
+      padding: 10px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+
+      &:hover {
+        background: linear-gradient(135deg, #e0e7ff 0%, #cce0ff 100%);
+        color: $primary-color;
+        box-shadow: 0 2px 8px rgba(0,102,255,0.10);
+      }
+    }
+
+    .send-btn {
+      min-width: 44px;
+      height: 40px;
+      margin-left: 10px;
+      border-radius: 16px;
+      background: linear-gradient(90deg, #0066ff 0%, #409eff 100%);
+      border: none;
+      font-size: 16px;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,102,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, box-shadow 0.2s;
+
+      &:hover, &:focus {
+        background: linear-gradient(90deg, #0052d9 0%, #409eff 100%);
+        box-shadow: 0 4px 16px rgba(0,102,255,0.16);
+      }
+
+      &:disabled {
+        background: #cce0ff;
+        color: #fff;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .el-icon {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .char-count {
+    position: absolute;
+    right: 24px;
+    bottom: -22px;
     font-size: 12px;
     color: $text-secondary;
-    margin-top: 8px;
+    opacity: 0.7;
+  }
+
+  .mobile-tip {
+    font-size: 13px;
+    color: $text-secondary;
+    margin-top: 6px;
     text-align: center;
+    opacity: 0.85;
+  }
+}
+
+// 响应式优化
+@media (max-width: 768px) {
+  .input-container {
+    padding: 10px 4px;
+
+    .input-wrapper {
+      border-radius: 18px;
+      padding: 0 2px;
+    }
+
+    .left-btns, .right-btns {
+      padding: 0 4px;
+      .btn-icon {
+        font-size: 18px;
+        padding: 7px;
+      }
+      .send-btn {
+        min-width: 36px;
+        height: 32px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
+    }
+
+    .input-textarea {
+      font-size: 13px;
+      padding: 8px 8px;
+      border-radius: 8px;
+    }
   }
 }
 

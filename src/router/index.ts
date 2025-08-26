@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: "/aiChat",
       name: "aiChat",
-      component: () => import("@/views/AiChatView.vue"),
+      component: () => import("@/views/MainView.vue"),
     },
     // 登录
     {
@@ -19,7 +19,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("@/views/MainView.vue"),
+      component: () => import("@/views/HomeView.vue"),
       meta: {
         title: "主页",
       },
