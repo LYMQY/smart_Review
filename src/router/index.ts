@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("@/views/AiChatView.vue"),
+      component: () => import("@/views/MainView.vue"),
       meta: {
         title: "主页",
       },
