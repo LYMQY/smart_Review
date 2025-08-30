@@ -74,7 +74,7 @@ import {
   wsSendMsgFormat,
 } from "@/ts/AiChatWebsocket.ts";
 import { sparkConfig } from "@/config/config.ts";
-import { ElMessage, ElAvatar, ElButton, ElIcon } from "element-plus";
+import { ElMessage, ElButton, ElIcon } from "element-plus";
 
 // 状态定义
 let sparkWS: WebSocket;
@@ -195,58 +195,6 @@ const scrollHandle = (val: number) => {
     top: val,
     behavior: "smooth"
   });
-};
-
-// 工具函数
-import { copyToClipboard } from "@/utils/commonUtil.ts";
-const copyRecord = (item: { content: string }) => {
-  copyToClipboard({
-    content: item.content,
-    success() {
-      ElMessage.success("复制成功，已存入剪贴板");
-    },
-    error() {
-      ElMessage.error("复制失败，请手动复制");
-    }
-  });
-};
-
-const handleCopyCodeSuccess = () => {
-  ElMessage.success("代码复制成功");
-};
-
-const deleteRecord = (index: number) => {
-  if (sendBtnDisabled.value) {
-    ElMessage.warning("当前正在生成回复，暂无法删除");
-    return;
-  }
-  chatList.value.splice(index, 1);
-};
-
-const reReply = (index: number) => {
-  if (wsMsgReceiveStatus.value === "receiveIng") {
-    ElMessage.warning("当前正在生成回复，暂无法重新提问");
-    return;
-  }
-  if (chatList.value.length - 1 === index) {
-    deleteRecord(index);
-    sendBtnDisabled.value = true;
-    askSpark();
-  } else {
-    let i = index - 1;
-    while (i >= 0) {
-      if (chatList.value[i].role === "user" && chatList.value[i].content) {
-        chatList.value.push({
-          role: "user",
-          content: chatList.value[i].content
-        });
-        sendBtnDisabled.value = true;
-        askSpark();
-        break;
-      }
-      i--;
-    }
-  }
 };
 
 // 功能按钮处理函数
