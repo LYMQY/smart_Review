@@ -49,8 +49,8 @@
       <div class="function-btns">
         <el-button type="text" class="func-btn" @click="handleFunction('research')">深入研究</el-button>
         <el-button type="text" class="func-btn" @click="handleFunction('write')">帮我写作</el-button>
-        <el-button type="text" class="func-btn" @click="handleFunction('image')">图像生成</el-button>
-        <el-button type="text" class="func-btn" @click="handleFunction('code')">AI 编程</el-button>
+        <el-button type="text" class="func-btn" @click="handleFunction('image')">数据处理</el-button>
+        <el-button type="text" class="func-btn" @click="handleFunction('code')">帮我审核</el-button>
         <el-button type="text" class="func-btn" @click="handleFunction('translate')">翻译</el-button>
         <el-button type="text" class="func-btn" @click="handleFunction('meeting')">记录会议</el-button>
         <el-button type="text" class="func-btn more-btn" @click="handleMoreFunctions">更多</el-button>
@@ -219,8 +219,8 @@ const handleFunction = (type: string) => {
   const functionMap = {
     'research': '深入研究',
     'write': '帮我写作',
-    'image': '图像生成',
-    'code': 'AI 编程',
+    'image': '数据处理',
+    'code': '帮我审核',
     'translate': '翻译',
     'meeting': '记录会议'
   };

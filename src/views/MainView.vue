@@ -240,7 +240,7 @@ onBeforeUnmount(() => {
             <UserFilled v-if="item.role === 'user'" />
             <img 
               v-else 
-              src="https://img1.baidu.com/it/u=2640995470,2945739766&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=500"
+              src="https://img2.baidu.com/it/u=130149749,600142291&fm=253&fmt=auto&app=138&f=GIF?w=500&h=500"
               alt="头像"
               class="avatar-img"
             />
