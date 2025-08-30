@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { UserFilled, Loading, DocumentCopy, Delete, Document, Edit, Message, ArrowUp } from "@element-plus/icons-vue";
+import { Document, Edit, Message, ArrowUp } from "@element-plus/icons-vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import {
   getWebsocketUrl,
