@@ -314,8 +314,8 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 // 全局样式变量
-$primary-color: #0066ff; // 豆包主色
-$light-primary: #e8f3ff; // 豆包浅色背景
+$primary-color: #0066ff; // 主色
+$light-primary: #e8f3ff; // 浅色背景
 $text-primary: #333333; // 主文本色
 $text-secondary: #666666; // 次要文本色
 $text-placeholder: #999999; // 占位文本色

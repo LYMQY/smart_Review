@@ -87,7 +87,8 @@ const askSpark = () => {
 const wsMsgReceiveHandle = (res: WSResParams) => {
   const dataArray = res?.payload?.choices?.text || [];
   dataArray.forEach(item => {
-    chatList.value[chatList.value.length - 1].content += item.content;
+    const content = item?.content ?? "";
+    chatList.value[chatList.value.length - 1].content += content;
   });
 
   switch (res.payload.choices.status) {
@@ -208,11 +209,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- 主容器：匹配豆包全屏布局 -->
+  <!-- 主容器：匹配全屏布局 -->
   <div class="doubao-chat-container">
     <!-- 聊天列表区域：占满剩余高度，滚动流畅 -->
     <ul class="chat-list" ref="aiChatListRef">
-      <!-- 初始欢迎消息：匹配豆包引导样式 -->
+      <!-- 初始欢迎消息：匹配引导样式 -->
       <li class="chat-item init-item" v-if="chatList.length === 0">
         <ElAvatar 
           class="chat-avatar" 
@@ -233,7 +234,7 @@ onBeforeUnmount(() => {
         v-for="(item, index) of chatList"
         :key="index"
       >
-        <!-- 头像：用户用图标，豆包用logo -->
+        <!-- 头像：用户用图标，用logo -->
         <ElAvatar class="chat-avatar">
           <template #default>
             <UserFilled v-if="item.role === 'user'" />
@@ -246,14 +247,14 @@ onBeforeUnmount(() => {
           </template>
         </ElAvatar>
 
-        <!-- 聊天内容：区分用户/豆包样式 -->
+        <!-- 聊天内容：区分样式 -->
         <div class="chat-content" :class="`chat-content--${item.role}`">
           <!-- 用户内容：简洁白色背景 -->
           <div v-if="item.role === 'user'" class="content-text">
             {{ item.content }}
           </div>
 
-          <!-- 豆包内容：带功能按钮 + 加载动画 -->
+          <!-- 内容：带功能按钮 + 加载动画 -->
           <div v-else class="assistant-content">
             <div class="content-text">
               <v-md-preview 
@@ -261,12 +262,12 @@ onBeforeUnmount(() => {
                 @copy-code-success="handleCopyCodeSuccess"
                 class="md-preview"
               />
-              <!-- 加载动画：豆包品牌色旋转 -->
+              <!-- 加载动画：品牌色旋转 -->
               <div class="loading-box" v-if="loadingIndex === index">
                 <ElIcon class="loading-icon">
                   <Loading />
                 </ElIcon>
-                <span class="loading-text">豆包正在思考...</span>
+                <span class="loading-text">智审通正在思考...</span>
               </div>
             </div>
 
@@ -301,8 +302,7 @@ onBeforeUnmount(() => {
       </li>
     </ul>
 
-    <!-- 输入区域：固定底部，匹配豆包样式 -->
-    <!-- 替换原有的输入区域，新增按钮布局 -->
+    <!-- 输入区域：固定底部，匹配样式 -->
     <div class="input-container">
       <div class="input-wrapper">
         <!-- 输入框 -->
@@ -354,9 +354,9 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
-// 1. 全局样式：匹配豆包品牌色与基础规范
-$primary-color: #0066ff; // 豆包主色
-$light-primary: #e8f3ff; // 豆包浅色背景
+// 1. 全局样式：匹配品牌色与基础规范
+$primary-color: #0066ff; // 主色
+$light-primary: #e8f3ff; // 浅色背景
 $text-primary: #333333; // 主文本色
 $text-secondary: #666666; // 次要文本色
 $text-placeholder: #999999; // 占位文本色
@@ -369,7 +369,7 @@ $disabled-color: #cccccc; // 禁用色
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  max-width: 1200px; // 豆包最大宽度限制
+  max-width: 1200px; //  最大宽度限制
   margin: 0 auto;
   padding: 0 16px;
   box-sizing: border-box;
@@ -384,7 +384,7 @@ $disabled-color: #cccccc; // 禁用色
   margin: 0;
   list-style: none;
 
-  // 滚动条样式：豆包细滚动条
+  // 滚动条样式：细滚动条
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -435,7 +435,7 @@ $disabled-color: #cccccc; // 禁用色
       }
     }
 
-    // 初始欢迎项：豆包引导样式
+    // 初始欢迎项：引导样式
     &.init-item {
       .init-content {
         background-color: $light-primary;
@@ -482,7 +482,7 @@ $disabled-color: #cccccc; // 禁用色
       }
     }
 
-    // 豆包聊天项：左侧对齐 + 浅色背景
+    // 聊天项：左侧对齐 + 浅色背景
     &.chat-item--assistant {
       .chat-content--assistant {
         background-color: $light-primary;
@@ -551,7 +551,7 @@ $disabled-color: #cccccc; // 禁用色
           color: $text-primary;
           font-size: 14px;
 
-          // 代码块样式：匹配豆包
+          // 代码块样式
           pre {
             background-color: #f5f7fa;
             border-radius: 4px;
